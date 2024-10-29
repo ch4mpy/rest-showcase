@@ -1,0 +1,42 @@
+issuer: https://oidc.c4-soft.com/auth/realms/rest-showcase
+bidule-api-port: 8081
+machin-api-port: 8082
+
+server:
+  port: 8083
+
+spring:
+  application:
+    name: bidule-api
+  security:
+    oauth2:
+      client:
+        provider:
+          sso:
+           issuer-uri: ${issuer}
+        registration:
+          bidule-registration:
+            provider: sso
+            authorization-grant-type: client_credentials
+            client-id: chouette-api
+            client-secret: change-me
+            scope: openid
+      resourceserver:
+        jwt:
+          issuer-uri: ${issuer}
+
+com:
+  c4-soft:
+    springaddons:
+      rest:
+        client:
+          machin-client:
+            base-url: http://localhost:${machin-api-port}
+            authorization:
+              oauth2:
+                forward-bearer: true
+          bidule-client:
+            base-url: http://localhost:${bidule-api-port}
+            authorization:
+              oauth2:
+                oauth2-registration-id: bidule-registration

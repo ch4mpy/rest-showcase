@@ -1,0 +1,16 @@
+issuer: https://oidc.c4-soft.com/auth/realms/rest-showcase
+bidule-api-port: 8081
+machin-api-port: 8082
+
+server:
+  port: ${bidule-api-port}
+
+spring:
+  application:
+    name: bidule-api
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${issuer}
+          principal-claim-name: preferred_username
