@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0-RC1</version>
+		<version>3.4.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.c4soft.showcase.rest</groupId>
@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-addons.version>8.0.0-RC1</spring-addons.version>
+		<spring-addons.version>8.1.3</spring-addons.version>
 	</properties>
 
 	<modules>
