@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -25,10 +24,8 @@ public class ChronosClientConfig {
 	private URI url;
 
 	@Bean
-	public ApiClient chronosApiClient(WebClient.Builder chronosClientBuilder,
-			ServerOAuth2AuthorizedClientExchangeFilterFunction serverOAuth2AuthorizedClientExchangeFilterFunction) {
+	public ApiClient chronosApiClient(WebClient.Builder chronosClientBuilder) {
 		var webClient = chronosClientBuilder.clone();
-		webClient.filter(serverOAuth2AuthorizedClientExchangeFilterFunction);
 
 		return new ApiClient(webClient.build()).setBasePath(url.toString());
 	}

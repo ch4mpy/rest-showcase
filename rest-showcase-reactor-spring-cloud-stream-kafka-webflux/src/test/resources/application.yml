@@ -60,11 +60,10 @@ com:
         client:
           chronos-client:
             expose-builder: true
-# Uncomment if https://github.com/ch4mpy/spring-addons/issues/247 is solved
-#            authorization:
-#              oauth2:
+            authorization:
+              oauth2:
                 # authorize outgoing requests with a Bearer obtained using an OAuth2 client registration
-#                oauth2-registration-id: keycloak
+                oauth2-registration-id: keycloak
 
 worker:
   chronos:
