@@ -1,0 +1,69 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Chronos
+
+paths:
+  /api/task/{id}/start:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    patch:
+      summary: Start a task
+      operationId: start-task
+      tags:
+        - Task Manager
+      responses:
+        '204':
+          description: Task successfully started
+        '404':
+          description: Task not found
+        '500':
+          description: Unexpected API error
+
+  /api/task/{id}/close:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    patch:
+      summary: Close a task
+      operationId: close-task
+      tags:
+        - Task Manager
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloseTaskRequest'
+      responses:
+        '204':
+          description: Task successfully closed
+        '404':
+          description: Task not found
+        '500':
+          description: Unexpected API error
+
+
+components:
+  schemas:
+    CloseTaskRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - SUCCESSFUL
+            - ERROR
+        reason:
+          type: string

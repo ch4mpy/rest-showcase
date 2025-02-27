@@ -1,0 +1,73 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: ${keycloak.credentials.client-id}
+            client-secret: ${keycloak.credentials.client-secret}
+            authorization-grant-type: ${keycloak.credentials.grant-type}
+        provider:
+          keycloak:
+            user-name-attribute: email
+            issuer-uri: ${keycloak.realm-url}
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.realm-url}
+  cloud:
+    function:
+      definition: executeTask
+    stream:
+      bindings:
+        executeTask-in-0:
+          destination: ${worker.queue.main}
+          group: ${worker.queue.main}
+      kafka:
+        binder:
+          auto-add-partitions: true
+          auto-create-topics: true
+          consumer-properties:
+            key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        bindings:
+          executeTask-in-0:
+            consumer:
+              start-offset: latest
+              reset-offsets: true
+              reactive-auto-commit: true
+      default-binder: kafka
+
+keycloak:
+  realm: integration-test-realm
+  realm-url: ${keycloak.base-url}/realms/${keycloak.realm}
+  credentials:
+    grant-type: client_credentials
+    client-id: client-credentials-test-client
+    # Realm secret in test containers
+    client-secret: client-credentials-test-client-secret
+
+com:
+  c4-soft:
+    springaddons:
+      oidc:
+        # Trusted OpenID Providers configuration (with authorities mapping)
+        ops:
+          - iss: ${keycloak.realm-url}
+            username-claim: $.${spring.security.oauth2.resourceserver.jwt.principal-claim-name}
+            authorities:
+              - path: $.${spring.security.oauth2.resourceserver.jwt.authorities-claim-name}
+      rest:
+        client:
+          chronos-client:
+            expose-builder: true
+# Uncomment if https://github.com/ch4mpy/spring-addons/issues/247 is solved
+#            authorization:
+#              oauth2:
+                # authorize outgoing requests with a Bearer obtained using an OAuth2 client registration
+#                oauth2-registration-id: keycloak
+
+worker:
+  chronos:
+    url: ${wiremock.server.baseUrl}
+  queue:
+    main: TASK.PROCESS.MAIN
