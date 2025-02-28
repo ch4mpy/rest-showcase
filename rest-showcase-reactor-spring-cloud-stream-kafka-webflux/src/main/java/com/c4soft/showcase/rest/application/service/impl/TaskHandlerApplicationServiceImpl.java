@@ -17,16 +17,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class TaskHandlerApplicationServiceImpl implements TaskHandlerApplicationService {
 
-	private final TaskHandler taskHandler;
+    private final TaskHandler taskHandler;
 
-	private final ChronosTaskService chronosTaskService;
+    private final ChronosTaskService chronosTaskService;
 
-	@Override
-	public Flux<Void> executeTask(Flux<Message<TaskEventDTO>> taskEventMessage) {
-		return taskEventMessage.map(Message::getPayload).map(taskEventDTO -> new Task(taskEventDTO.id())).flatMap(
-				task -> chronosTaskService.startTask(task.id())
-						.doOnSuccess(unused -> log.info("Task id={} successfully started", task.id()))
-						.then(Mono.defer(() -> taskHandler.handle(task)))
-						.then(Mono.defer(() -> chronosTaskService.finishTask(task.id()))));
-	}
+    @Override
+    public Flux<Void> executeTask(Flux<Message<TaskEventDTO>> taskEventMessage) {
+        return taskEventMessage.map(Message::getPayload).map(taskEventDTO -> new Task(taskEventDTO.id())).flatMap(
+                task -> chronosTaskService.startTask(task.id())
+                        .doOnSuccess(unused -> log.info("Task id={} successfully started", task.id()))
+                        .then(Mono.defer(() -> taskHandler.handle(task)))
+                        .then(Mono.defer(() -> chronosTaskService.finishTask(task.id()))));
+    }
 }

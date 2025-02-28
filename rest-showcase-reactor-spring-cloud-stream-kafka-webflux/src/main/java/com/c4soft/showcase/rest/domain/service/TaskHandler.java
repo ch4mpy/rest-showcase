@@ -5,6 +5,6 @@ import reactor.core.publisher.Mono;
 
 public interface TaskHandler {
 
-	Mono<Void> handle(Task task);
+    Mono<Void> handle(Task task);
 
 }

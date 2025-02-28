@@ -14,18 +14,18 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ChronosTaskServiceImpl implements ChronosTaskService {
 
-	private final TaskManagerClient taskManagerClient;
+    private final TaskManagerClient taskManagerClient;
 
-	@Override
-	public Mono<Void> startTask(Long id) {
-		return taskManagerClient.startTask(id);
-	}
+    @Override
+    public Mono<Void> startTask(Long id) {
+        return taskManagerClient.startTask(id);
+    }
 
-	@Override
-	public Mono<Void> finishTask(Long id) {
-		var finishBody = new ChronosCloseTaskRequestDTO().status(StatusEnum.SUCCESSFUL);
+    @Override
+    public Mono<Void> finishTask(Long id) {
+        var finishBody = new ChronosCloseTaskRequestDTO().status(StatusEnum.SUCCESSFUL);
 
-		return taskManagerClient.closeTask(id, finishBody);
-	}
+        return taskManagerClient.closeTask(id, finishBody);
+    }
 
 }

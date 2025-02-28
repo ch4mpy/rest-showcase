@@ -28,71 +28,68 @@ import java.util.stream.Stream;
 
 class TaskReceiverIT extends BaseIT {
 
-  @DynamicPropertySource
-  private static void setup(DynamicPropertyRegistry registry) {
-    setupProperties(registry);
-  }
+    private static final String CHRONOS_TASK_BASE_ENDPOINT = "/api/task";
+    private static final String CHRONOS_SELECT_TASK_ENDPOINT = CHRONOS_TASK_BASE_ENDPOINT + "/{id}";
+    private static final String CHRONOS_CLOSE_TASK_ENDPOINT = CHRONOS_SELECT_TASK_ENDPOINT + "/close";
+    private static final String CHRONOS_START_TASK_ENDPOINT = CHRONOS_SELECT_TASK_ENDPOINT + "/start";
+    @Autowired
+    private StreamOperations inputDestination;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Value("${worker.queue.main}")
+    private String executeTaskFunctionQueue;
 
-  @Autowired
-  private StreamOperations inputDestination;
+    @DynamicPropertySource
+    private static void setup(DynamicPropertyRegistry registry) {
+        setupProperties(registry);
+    }
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    private static Stream<TaskEventDTO> executeTaskIntegrationTest() {
+        return Stream.of(
+                TaskEventDTO.builder()
+                        .id(1L)
+                        .build()
+        );
+    }
 
-  @Value("${worker.queue.main}")
-  private String executeTaskFunctionQueue;
+    @BeforeEach
+    void setup() {
+        WireMock.reset();
+    }
 
-  private static final String CHRONOS_TASK_BASE_ENDPOINT = "/api/task";
-  private static final String CHRONOS_SELECT_TASK_ENDPOINT = CHRONOS_TASK_BASE_ENDPOINT + "/{id}";
-  private static final String CHRONOS_CLOSE_TASK_ENDPOINT = CHRONOS_SELECT_TASK_ENDPOINT + "/close";
-  private static final String CHRONOS_START_TASK_ENDPOINT = CHRONOS_SELECT_TASK_ENDPOINT + "/start";
+    @AfterEach
+    void cleanup() {
+        WireMock.reset();
+    }
 
-  private static Stream<TaskEventDTO> executeTaskIntegrationTest() {
-    return Stream.of(
-        TaskEventDTO.builder()
-            .id(1L)
-            .build()
-    );
-  }
+    @MethodSource
+    @ParameterizedTest
+    void executeTaskIntegrationTest(TaskEventDTO taskEventDTO) throws JsonProcessingException {
+        // given
+        var message = MessageBuilder.withPayload(taskEventDTO).build();
+        // and
+        WireMock.stubFor(TaskManagerChronosMockServer.stubStartTask204(taskEventDTO.id().toString()));
+        // and
+        var closeTaskBody = new ChronosCloseTaskRequestDTO().status(StatusEnum.SUCCESSFUL);
+        WireMock.stubFor(TaskManagerChronosMockServer.stubCloseTask204(
+                taskEventDTO.id().toString(),
+                objectMapper.writeValueAsString(closeTaskBody)
+        ));
 
-  @BeforeEach
-  void setup() {
-    WireMock.reset();
-  }
+        // when
+        inputDestination.send(executeTaskFunctionQueue, message);
 
-  @AfterEach
-  void cleanup() {
-    WireMock.reset();
-  }
-
-  @MethodSource
-  @ParameterizedTest
-  void executeTaskIntegrationTest(TaskEventDTO taskEventDTO) throws JsonProcessingException {
-    // given
-    var message = MessageBuilder.withPayload(taskEventDTO).build();
-    // and
-    WireMock.stubFor(TaskManagerChronosMockServer.stubStartTask204(taskEventDTO.id().toString()));
-    // and
-    var closeTaskBody = new ChronosCloseTaskRequestDTO().status(StatusEnum.SUCCESSFUL);
-    WireMock.stubFor(TaskManagerChronosMockServer.stubCloseTask204(
-        taskEventDTO.id().toString(),
-        objectMapper.writeValueAsString(closeTaskBody)
-    ));
-
-    // when
-    inputDestination.send(executeTaskFunctionQueue, message);
-
-    // then
-    URI startTaskUri = UriComponentsBuilder.fromUriString(CHRONOS_START_TASK_ENDPOINT)
-        .build(taskEventDTO.id());
-    Awaitility.await()
-        .atMost(Duration.ofSeconds(5))
-        .untilAsserted(() -> WireMock.verify(WireMock.patchRequestedFor(WireMock.urlEqualTo(startTaskUri.toString()))));
-    // and
-    URI closeTaskUri = UriComponentsBuilder.fromUriString(CHRONOS_CLOSE_TASK_ENDPOINT)
-        .build(taskEventDTO.id());
-    Awaitility.await()
-        .atMost(Duration.ofSeconds(5))
-        .untilAsserted(() -> WireMock.verify(WireMock.patchRequestedFor(WireMock.urlEqualTo(closeTaskUri.toString()))));
-  }
+        // then
+        URI startTaskUri = UriComponentsBuilder.fromUriString(CHRONOS_START_TASK_ENDPOINT)
+                .build(taskEventDTO.id());
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(5))
+                .untilAsserted(() -> WireMock.verify(WireMock.patchRequestedFor(WireMock.urlEqualTo(startTaskUri.toString()))));
+        // and
+        URI closeTaskUri = UriComponentsBuilder.fromUriString(CHRONOS_CLOSE_TASK_ENDPOINT)
+                .build(taskEventDTO.id());
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(5))
+                .untilAsserted(() -> WireMock.verify(WireMock.patchRequestedFor(WireMock.urlEqualTo(closeTaskUri.toString()))));
+    }
 }

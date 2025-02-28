@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class TaskHandlerImpl implements TaskHandler {
 
-	@Override
-	public Mono<Void> handle(Task task) {
-		var taskId = task.id();
+    @Override
+    public Mono<Void> handle(Task task) {
+        var taskId = task.id();
 
-		return Mono.just("Hello from Worker task handler taskId=" + taskId).doOnSuccess(log::info).then();
-	}
+        return Mono.just("Hello from Worker task handler taskId=" + taskId).doOnSuccess(log::info).then();
+    }
 }

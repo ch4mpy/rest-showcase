@@ -11,18 +11,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @TestConfiguration(proxyBeanMethods = false)
 public class TestcontainersConfiguration {
 
-  @Container
-  private final static KeycloakContainer keycloakContainer = ConfiguredTestContainers.createKeycloakContainer();
+    @Container
+    private final static KeycloakContainer keycloakContainer = ConfiguredTestContainers.createKeycloakContainer();
 
-  @Bean
-  KeycloakContainer keycloakContainer() {
-    return keycloakContainer;
-  }
+    @Bean
+    KeycloakContainer keycloakContainer() {
+        return keycloakContainer;
+    }
 
-  @Bean
-  DynamicPropertyRegistrar dynamicPropertyRegistrar(
-      KeycloakContainer keycloakContainer
-  ) {
-    return registry -> ConfiguredTestContainers.configureKeycloakContainer(registry, keycloakContainer);
-  }
+    @Bean
+    DynamicPropertyRegistrar dynamicPropertyRegistrar(
+            KeycloakContainer keycloakContainer
+    ) {
+        return registry -> ConfiguredTestContainers.configureKeycloakContainer(registry, keycloakContainer);
+    }
 }

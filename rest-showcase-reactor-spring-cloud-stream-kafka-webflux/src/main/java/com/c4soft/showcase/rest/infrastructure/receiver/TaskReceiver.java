@@ -16,10 +16,10 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class TaskReceiver {
 
-	private final TaskHandlerApplicationService taskHandlerApplicationService;
+    private final TaskHandlerApplicationService taskHandlerApplicationService;
 
-	@Bean
-	public Consumer<Flux<Message<TaskEventDTO>>> executeTask() {
-		return taskEventMessage -> taskHandlerApplicationService.executeTask(taskEventMessage).subscribe();
-	}
+    @Bean
+    public Consumer<Flux<Message<TaskEventDTO>>> executeTask() {
+        return taskEventMessage -> taskHandlerApplicationService.executeTask(taskEventMessage).subscribe();
+    }
 }

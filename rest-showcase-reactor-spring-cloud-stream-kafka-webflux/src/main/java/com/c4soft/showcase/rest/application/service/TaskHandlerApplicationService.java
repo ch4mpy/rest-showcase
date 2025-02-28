@@ -6,6 +6,6 @@ import reactor.core.publisher.Flux;
 
 public interface TaskHandlerApplicationService {
 
-	Flux<Void> executeTask(Flux<Message<TaskEventDTO>> taskEventMessage);
+    Flux<Void> executeTask(Flux<Message<TaskEventDTO>> taskEventMessage);
 
 }

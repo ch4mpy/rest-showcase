@@ -20,19 +20,19 @@ import java.net.URI;
 @ConfigurationProperties(prefix = "worker.chronos")
 public class ChronosClientConfig {
 
-	@NotNull
-	private URI url;
+    @NotNull
+    private URI url;
 
-	@Bean
-	public ApiClient chronosApiClient(WebClient.Builder chronosClientBuilder) {
-		var webClient = chronosClientBuilder.clone();
+    @Bean
+    public ApiClient chronosApiClient(WebClient.Builder chronosClientBuilder) {
+        var webClient = chronosClientBuilder.clone();
 
-		return new ApiClient(webClient.build()).setBasePath(url.toString());
-	}
+        return new ApiClient(webClient.build()).setBasePath(url.toString());
+    }
 
-	@Bean
-	public TaskManagerClient taskManagerClient(ApiClient apiClient) {
-		return new TaskManagerClient(apiClient);
-	}
+    @Bean
+    public TaskManagerClient taskManagerClient(ApiClient apiClient) {
+        return new TaskManagerClient(apiClient);
+    }
 
 }
