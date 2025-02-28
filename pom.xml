@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-addons.version>8.1.4-SNAPSHOT</spring-addons.version>
+		<spring-addons.version>8.1.4</spring-addons.version>
 	</properties>
 
 	<modules>
@@ -26,7 +26,8 @@
 		<module>rest-showcase-chouette-api-servlet</module>
 		<module>rest-showcase-chouette-api-servlet-addons</module>
 		<module>rest-showcase-chouette-api-webflux-addons</module>
-	</modules>
+        <module>rest-showcase-reactor-spring-cloud-stream-kafka-webflux</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
