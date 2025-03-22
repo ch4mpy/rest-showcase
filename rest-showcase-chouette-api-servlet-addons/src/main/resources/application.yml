@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: bidule-api
+    name: chouette-api
   security:
     oauth2:
       client:
@@ -31,12 +31,18 @@ com:
       rest:
         client:
           machin-client:
-            base-url: http://localhost:${machin-api-port}
+            base-url: https://localhost:${machin-api-port}
+            http:
+              client-http-request-factory-impl: jdk
+              ssl-certificates-validation-enabled: false
             authorization:
               oauth2:
                 forward-bearer: true
           bidule-client:
             base-url: http://localhost:${bidule-api-port}
+            http:
+              #client-http-request-factory-impl: http-components
+              ssl-certificates-validation-enabled: false
             authorization:
               oauth2:
                 oauth2-registration-id: bidule-registration

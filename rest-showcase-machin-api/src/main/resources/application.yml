@@ -4,6 +4,8 @@ machin-api-port: 8082
 
 server:
   port: ${machin-api-port}
+  ssl:
+    enabled: false
 
 spring:
   application:
@@ -14,3 +16,19 @@ spring:
         jwt:
           issuer-uri: ${issuer}
           principal-claim-name: preferred_username
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+---
+spring:
+    config:
+        activate:
+            on-profile: ssl
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:/localhost.p12
+    key-store-password: secret
