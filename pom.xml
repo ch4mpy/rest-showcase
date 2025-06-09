@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.4</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.c4soft.showcase.rest</groupId>
-	<artifactId>rest-showcase-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<description>Showcase for inter resource servers communication</description>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.0</version>
+        <relativePath /> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.c4soft.showcase.rest</groupId>
+    <artifactId>rest-showcase-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <description>Showcase for inter resource servers communication</description>
 
-	<properties>
-		<java.version>17</java.version>
-		<spring-addons.version>8.1.5</spring-addons.version>
-	</properties>
+    <properties>
+        <java.version>17</java.version>
+        <openapi-generator-maven-plugin.version>7.13.0</openapi-generator-maven-plugin.version>
+        <wiremock-spring-boot.version>3.10.0</wiremock-spring-boot.version>
+        <spring-addons.version>8.1.15</spring-addons.version>
+    </properties>
 
-	<modules>
-		<module>rest-showcase-bidule-api</module>
-		<module>rest-showcase-machin-api</module>
-		<module>rest-showcase-chouette-api-servlet</module>
-		<module>rest-showcase-chouette-api-servlet-addons</module>
-		<module>rest-showcase-chouette-api-webflux-addons</module>
+    <modules>
+        <module>rest-showcase-bidule-api</module>
+        <module>rest-showcase-machin-api</module>
+        <module>rest-showcase-chouette-api-servlet</module>
+        <module>rest-showcase-chouette-api-servlet-addons</module>
+        <module>rest-showcase-chouette-api-webflux-addons</module>
         <module>rest-showcase-reactor-spring-cloud-stream-kafka-webflux</module>
     </modules>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.c4-soft.springaddons</groupId>
-				<artifactId>spring-addons-starter-rest</artifactId>
-				<version>${spring-addons.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.c4-soft.springaddons</groupId>
+                <artifactId>spring-addons-starter-rest</artifactId>
+                <version>${spring-addons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.c4-soft.springaddons</groupId>
+                <artifactId>spring-addons-starter-oidc</artifactId>
+                <version>${spring-addons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wiremock.integrations</groupId>
+                <artifactId>wiremock-spring-boot</artifactId>
+                <version>${wiremock-spring-boot.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<build>
-		<pluginManagement>
-			<plugins>
+    <build>
+        <pluginManagement>
+            <plugins>
               <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -54,41 +66,46 @@
                   </annotationProcessorPaths>
                 </configuration>
               </plugin>
-				<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<configuration>
-						<excludes>
-							<exclude>
-								<groupId>org.projectlombok</groupId>
-								<artifactId>lombok</artifactId>
-							</exclude>
-						</excludes>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.openapitools</groupId>
+                    <artifactId>openapi-generator-maven-plugin</artifactId>
+                    <version>${openapi-generator-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-	<repositories>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
