@@ -2,6 +2,7 @@ package com.c4soft.showcase.rest;
 
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.restclient.autoconfigure.RestClientSsl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpRequest;
@@ -20,9 +21,10 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class RestConfiguration {
 
   @Bean
-  RestClient machinClient(@Value("machin-base-uri") URI machinBaseUri) {
+  RestClient machinClient(@Value("${machin-base-uri}") URI machinBaseUri, RestClientSsl ssl) {
     return RestClient.builder().baseUrl(machinBaseUri)
-        .requestInterceptor(forwardingClientHttpRequestInterceptor()).build();
+        .requestInterceptor(forwardingClientHttpRequestInterceptor())
+        .apply(ssl.fromBundle("client")).build();
   }
 
   @Bean
@@ -32,13 +34,13 @@ public class RestConfiguration {
   }
 
   @Bean
-  RestClient biduleClient(@Value("bidule-base-uri") URI biduleBaseUri,
+  RestClient biduleClient(@Value("${bidule-base-uri}") URI biduleBaseUri,
       OAuth2AuthorizedClientManager authorizedClientManager,
-      OAuth2AuthorizedClientRepository authorizedClientRepository) {
+      OAuth2AuthorizedClientRepository authorizedClientRepository, RestClientSsl ssl) {
     return RestClient.builder().baseUrl(biduleBaseUri)
         .requestInterceptor(registrationClientHttpRequestInterceptor(authorizedClientManager,
             authorizedClientRepository, "bidule-registration"))
-        .build();
+        .apply(ssl.fromBundle("client")).build();
   }
 
   @Bean

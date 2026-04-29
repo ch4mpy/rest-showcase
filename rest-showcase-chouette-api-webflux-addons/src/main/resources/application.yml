@@ -1,9 +1,13 @@
-issuer: https://oidc.c4-soft.com/auth/realms/rest-showcase
+issuer: https://host.docker.internal/auth/realms/rest-showcase
 bidule-api-port: 8081
+bidule-base-uri: https://localhost:${bidule-api-port}
 machin-api-port: 8082
+machin-base-uri: https://localhost:${machin-api-port}
 
 server:
   port: 8083
+  ssl:
+    bundle: server
 
 spring:
   application:
@@ -24,6 +28,17 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${issuer}
+  ssl:
+    bundle:
+      pem:
+        client:
+          truststore:
+            certificate: classpath:tls.crt
+        server:
+          keystore:
+            certificate: classpath:tls.crt
+            private-key: classpath:tls.key
+            private-key-password: change-me
 
 com:
   c4-soft:
@@ -31,12 +46,14 @@ com:
       rest:
         client:
           machin-client:
-            base-url: http://localhost:${machin-api-port}
+            base-url: ${machin-base-uri}
             authorization:
               oauth2:
                 forward-bearer: true
+            ssl-bundle: client
           bidule-client:
-            base-url: http://localhost:${bidule-api-port}
+            base-url: ${bidule-base-uri}
             authorization:
               oauth2:
                 oauth2-registration-id: bidule-registration
+            ssl-bundle: client

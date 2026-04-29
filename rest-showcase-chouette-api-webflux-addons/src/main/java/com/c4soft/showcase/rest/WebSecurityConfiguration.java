@@ -1,7 +1,7 @@
 package com.c4soft.showcase.rest;
 
 import java.nio.charset.Charset;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.web.server.autoconfigure.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.buffer.DataBufferUtils;

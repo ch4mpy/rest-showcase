@@ -1,6 +1,6 @@
 package com.c4soft.showcase.rest;
 
-import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.web.server.autoconfigure.ServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;

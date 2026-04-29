@@ -11,9 +11,9 @@
     <description>WebFlux app with reactive Spring Cloud Stream Kafka, with OIDC and REST OAuth2 Client</description>
     <properties>
         <!-- DEPENDENCIES-->
-        <testcontainers-keycloak.version>3.6.0</testcontainers-keycloak.version>
-        <wiremock-spring-boot.version>3.6.0</wiremock-spring-boot.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <testcontainers-keycloak.version>4.1.1</testcontainers-keycloak.version>
+        <wiremock-spring-boot.version>4.2.0</wiremock-spring-boot.version>
+        <spring-cloud.version>2025.1.1</spring-cloud.version>
 
         <!--     OPENAPI -->
         <open-api-generator.apiClientSuffix>Client</open-api-generator.apiClientSuffix>
@@ -40,12 +40,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <artifactId>spring-boot-starter-security-oauth2-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.c4-soft.springaddons</groupId>
             <artifactId>spring-addons-starter-oidc</artifactId>
-            <version>${spring-addons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.0</version>
+        <version>4.0.6</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.c4soft.showcase.rest</groupId>
@@ -16,10 +16,10 @@
     <description>Showcase for inter resource servers communication</description>
 
     <properties>
-        <java.version>17</java.version>
-        <openapi-generator-maven-plugin.version>7.13.0</openapi-generator-maven-plugin.version>
-        <wiremock-spring-boot.version>3.10.0</wiremock-spring-boot.version>
-        <spring-addons.version>8.1.15</spring-addons.version>
+        <java.version>24</java.version>
+        <openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
+        <wiremock-spring-boot.version>4.2.0</wiremock-spring-boot.version>
+        <spring-addons.version>9.1.3</spring-addons.version>
     </properties>
 
     <modules>

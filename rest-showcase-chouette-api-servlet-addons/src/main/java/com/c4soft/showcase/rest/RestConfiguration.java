@@ -1,22 +1,26 @@
 package com.c4soft.showcase.rest;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
-import com.c4_soft.springaddons.rest.RestClientHttpExchangeProxyFactoryBean;
+import org.springframework.web.client.support.RestClientHttpServiceGroupConfigurer;
+import org.springframework.web.service.registry.ImportHttpServices;
 
 @Configuration
+@ImportHttpServices(group = "bidule", types = {BiduleApi.class})
+@ImportHttpServices(group = "machin", types = {MachinApi.class})
 public class RestConfiguration {
 
-  @Bean
-  BiduleApi biduleApi(RestClient biduleClient) throws Exception {
-    return new RestClientHttpExchangeProxyFactoryBean<>(BiduleApi.class, biduleClient).getObject();
-  }
+  // @Bean
+  RestClientHttpServiceGroupConfigurer groupConfigurer(RestClient.Builder biduleClientBuilder,
+      RestClient.Builder machinClientBuilder) {
 
-
-  @Bean
-  MachinApi machinApi(RestClient machinClient) throws Exception {
-    return new RestClientHttpExchangeProxyFactoryBean<>(MachinApi.class, machinClient).getObject();
+    return groups -> {
+      groups.forEachClient((group) -> switch (group.name()) {
+        case "bidule" -> biduleClientBuilder;
+        case "machin" -> machinClientBuilder;
+        default -> throw new IllegalStateException("Unexpected group: " + group.name());
+      });
+    };
   }
 
 }
